@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.OrderMapper">
+        <!--新增-->
+    <insert id="insert">
+        insert into `order`(order_no, num, total, address_id, goods_id, shopkeeper_id, user_id, time, status)
+        values (#{orderNo}, #{num}, #{total}, #{addressId}, #{goodsId}, #{shopkeeperId}, #{userId}, #{time}, #{status})
+    </insert>
+      <!--删除-->
+    <delete id="deleteById">
+        delete from `order` where id = #{id}
+    </delete>
+     <!--修改-->
+    <update id="update" parameterType="com.example.springboot.entity.Order">
+        update `order`
+        <set>
+            <if test="orderNo != null and orderNo != ''">
+                order_no = #{orderNo},
+            </if>
+            <if test="num != null">
+                num = #{num},
+            </if>
+            <if test="total != null and total != ''">
+                total = #{total},
+            </if>
+            <if test="addressId != null">
+                address_id = #{addressId},
+            </if>
+            <if test="goodsId != null">
+                goods_id = #{goodsId},
+            </if>
+            <if test="shopkeeperId != null">
+                shopkeeper_id = #{shopkeeperId},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="time != null and time != ''">
+                time = #{time},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <!--查询-->
+    <select id="selectAll" resultType="com.example.springboot.entity.Order">
+        select o.*,shopkeeper.shop_name as shopName, goods.name as goodsName,goods.price as goodsPrice,goods.pic as goodsPic,
+        address.name as addressName,address.phone as addressPhone,address.address as address,
+        user.name as username
+        from `order` as o
+        left join  shopkeeper on shopkeeper.id=o.shopkeeper_id
+        left join goods on goods.id=o.goods_id
+        left join address on address.id=o.address_id
+        left join user on user.id=o.user_id
+        <where>
+
+            <if test="orderNo != null and orderNo != ''">
+                and o.order_no = #{orderNo}
+            </if>
+            <if test="shopkeeperId != null">
+                and o.shopkeeper_id = #{shopkeeperId}
+            </if>
+            <if test="userId != null">
+                and o.user_id = #{userId}
+            </if>
+            <if test="status != null and status != ''">
+                and o.status = #{status}
+            </if>
+        </where>
+        order by id desc
+    </select>
+    <select id="selectByOrderNo" resultType="com.example.springboot.entity.Order">
+        select `order`.*
+        from `order`
+        where order_no = #{orderNo}
+    </select>
+
+    <select id="selectThisMonthOrderNum" resultType="Integer">
+        select COUNT(*) AS currentNum
+        from `order`
+        where YEAR(time) = YEAR(CURDATE())
+        and MONTH(time) = MONTH(CURDATE())
+        <if test="shopkeeperId != null">
+            and `order`.shopkeeper_id = #{shopkeeperId}
+        </if>
+    </select>
+
+    <select id="selectLastMonthOrderNum" resultType="Integer">
+    select COUNT(*) AS lastNum
+    from `order`
+    where DATE_FORMAT(time, '%Y-%m') = DATE_FORMAT(NOW() - INTERVAL 1 MONTH, '%Y-%m')
+        <if test="shopkeeperId != null">
+            and `order`.shopkeeper_id = #{shopkeeperId}
+        </if>
+    </select>
+
+    <select id="selectThisMonthOrderRevenue" resultType="java.math.BigDecimal">
+        select IFNULL(SUM(total), 0) as currentRevenue
+        from `order`
+        where YEAR(time) = YEAR(CURDATE())
+        and MONTH(time) = MONTH(CURDATE())
+        <if test="shopkeeperId != null">
+            and `order`.shopkeeper_id = #{shopkeeperId}
+        </if>
+    </select>
+
+    <select id="selectLastMonthOrderRevenue" resultType="java.math.BigDecimal">
+        select IFNULL(SUM(total), 0) as lastRevenue
+        from `order`
+        where DATE_FORMAT(time, '%Y-%m') = DATE_FORMAT(NOW() - INTERVAL 1 MONTH, '%Y-%m')
+        <if test="shopkeeperId != null">
+            and `order`.shopkeeper_id = #{shopkeeperId}
+        </if>
+    </select>
+
+        <select id="selectType" resultType="com.example.springboot.entity.Order">
+        select type.name as typeName, SUM(o.num) as saleNum
+        from `order` as o
+        left join goods on o.goods_id=goods.id
+        left join type on type.id =goods.type_id
+        where
+            goods.status='上架'
+            <if test="shopkeeperId != null">
+            and o.shopkeeper_id = #{shopkeeperId}
+        </if>
+            group by type.name
+        </select>
+</mapper>
+

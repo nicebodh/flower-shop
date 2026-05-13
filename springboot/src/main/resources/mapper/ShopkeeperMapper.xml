@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.ShopkeeperMapper">
+
+
+    <insert id="insert">
+        insert into shopkeeper (name,username,password,email,avatar,phone,role,shop_name)
+        values(#{name},#{username},#{password},#{email},#{avatar},#{phone},#{role},#{shopName})
+    </insert>
+
+    <delete id="deleteById">
+        delete from shopkeeper
+        where  id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.example.springboot.entity.Shopkeeper">
+        update shopkeeper
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="avatar != null and avatar != ''">
+                avatar = #{avatar},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="shopName != null and shopName != ''">
+                shop_name = #{shopName},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <select id="selectAll" resultType="com.example.springboot.entity.Shopkeeper">
+        select * from shopkeeper
+        <where>
+            <if test="name != null and name != ''">
+             and shopkeeper.name like concat('%', #{name}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="selectShopkeeperByUsername" resultType="com.example.springboot.entity.Shopkeeper">
+        select shopkeeper.*
+        from shopkeeper
+        where username = #{username}
+    </select>
+
+    <select id="selectById" resultType="com.example.springboot.entity.Shopkeeper">
+        select shopkeeper.*
+        from shopkeeper
+        where id = #{id}
+    </select>
+
+</mapper>

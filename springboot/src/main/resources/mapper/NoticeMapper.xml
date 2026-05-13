@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.NoticeMapper">
+    <insert id="insert">
+        insert into notice (title,content,time,user_id)
+        values(#{title},#{content},#{time},#{userId})
+    </insert>
+
+    <delete id="deleteById">
+        delete from notice
+        where  id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.example.springboot.entity.Notice">
+        update notice
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectAll" resultType="com.example.springboot.entity.Notice">
+         select notice.*,admin.name as publisher
+         from notice left join admin on admin.id=notice.user_id
+         <where>
+             <if test="title != null and title != ''">
+              and title like concat('%', #{title}, '%')
+             </if>
+         </where>
+    order by id desc
+    </select>
+
+</mapper>

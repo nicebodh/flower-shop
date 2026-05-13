@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.UserMapper">
+
+    <insert id="insert">
+        insert into user (username,password,avatar,name,sex,age,phone,email,role,time)
+        values(#{username},#{password},#{avatar},#{name},#{sex},#{age},#{phone},#{email},#{role},#{time})
+    </insert>
+
+    <delete id="deleteById">
+        delete from user
+        where  id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.example.springboot.entity.User">
+        update user
+        <set>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="avatar != null and avatar != ''">
+                avatar = #{avatar},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="sex != null and sex != ''">
+                sex = #{sex},
+            </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectAll" resultType="com.example.springboot.entity.User">
+        select * from user
+        <where>
+            <if test="name != null and name != ''">
+            and  name like concat('%', #{name}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectUserByUsername" resultType="com.example.springboot.entity.User">
+        select user.*
+        from user
+        where username = #{username}
+    </select>
+
+    <select id="selectById" resultType="com.example.springboot.entity.User">
+        select user.*
+        from user
+        where id = #{id}
+    </select>
+
+    <select id="selectThisMonthUserNum" resultType="Integer">
+        select COUNT(*) AS currentUser
+        from user
+        where YEAR(time) = YEAR(CURDATE())
+        and MONTH(time) = MONTH(CURDATE())
+    </select>
+    <select id="selectLastMonthUserNum" resultType="Integer">
+        select COUNT(*) AS lastUser
+        from user
+        where DATE_FORMAT(time, '%Y-%m') = DATE_FORMAT(NOW() - INTERVAL 1 MONTH, '%Y-%m')
+    </select>
+</mapper>

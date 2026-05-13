@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.BannerMapper">
+        <!--新增-->
+    <insert id="insert">
+        insert into banner(pic, goods_id, sort)
+        values (#{pic}, #{goodsId}, #{sort})
+    </insert>
+      <!--删除-->
+    <delete id="deleteById">
+        delete from banner where id = #{id}
+    </delete>
+     <!--修改-->
+    <update id="update" parameterType="com.example.springboot.entity.Banner">
+        update banner
+        <set>
+            <if test="pic != null and pic != ''">
+                pic = #{pic},
+            </if>
+            <if test="goodsId != null">
+                goods_id = #{goodsId},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <!--查询-->
+    <select id="selectAll" resultType="com.example.springboot.entity.Banner">
+        select `banner`.* ,goods.name as goodsName
+        from `banner`
+        left join goods on goods.id=banner.goods_id
+        <where>
+            <if test="goodsName != null and goodsName != ''">
+                and goods.name like concat('%', #{goodsName}, '%')
+            </if>
+
+        </where>
+        order by  `banner`.sort
+    </select>
+    
+</mapper>
+

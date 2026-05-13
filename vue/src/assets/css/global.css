@@ -1,0 +1,77 @@
+*{
+    box-sizing: border-box;
+}
+html{
+    overflow-y: auto;
+}
+body{
+    margin: 0;
+    padding: 0;
+    color: #333333;
+    font-size: 14px;
+    width: 100% !important;
+}
+p{
+    margin: 0;
+    padding: 0;
+}
+.pagination{
+    margin-top: 15px;
+}
+.cell{
+    font-weight: normal;
+    font-size: 14px;
+}
+.form{
+    margin: 20px 80px 20px 50px;
+}
+.avatar-uploader .avatar{
+    width: 90px;
+    height: 90px;
+    display: block;
+}
+.avatar-uploader-icon {
+    font-size: 28px!important;
+    color: #8c939d!important;
+    width: 90px!important;
+    height: 90px!important;
+    text-align: center!important;
+}
+.avatar-uploader .el-upload {
+    border: 1px dashed var(--el-border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: var(--el-transition-duration-fast);
+}
+.float-right{
+    float: right;
+}
+.table-img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.icon{
+    vertical-align: -10%;
+}
+.search{
+    margin-bottom: 20px;
+}
+.search-input{
+    width: 200px!important;
+    margin-right: 8px;
+}
+.avatar-uploader {
+    height: 90px;
+}
+/* 多图上传图片大小调整 */
+.el-upload--picture-card{
+    width: 90px!important;
+    height: 90px!important;
+}
+.el-upload-list__item{
+    width: 90px!important;
+    height: 90px!important;
+}
